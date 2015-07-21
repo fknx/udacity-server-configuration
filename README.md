@@ -5,6 +5,7 @@
 - SSH port: `2200`
 - to ban attackers I have used `fail2ban`
 - to keep the system up to date I set up the `unattended-upgrades` package
+- to monitor the system I have installed `Munin`
 
 ### Software
 
@@ -17,6 +18,8 @@
 	apt-get install python-psycopg2
 	apt-get install fail2ban
 	apt-get install unattended-upgrades
+	apt-get install munin
+	apt-get install nginx
 
 ### Configuration
 
@@ -65,6 +68,16 @@
 	APT::Periodic::Download-Upgradeable-Packages "1";
 	APT::Periodic::AutocleanInterval "7";
 	APT::Periodic::Unattended-Upgrade "1";
+
+##### monitoring
+
+I've installed [Munin](http://munin-monitoring.org) to monitor apache and installed nginx to serve the static website created by munin. I've configured nginx to listen on port 8888, but although I allowed access to port 8888 in ufw I can't reach nginx from the outside. Probably because the port is not allowed for the EC2 instance. When I configured nginx to listen on port 80 everything worked fine, but of course  I had to stop apache first. I would have configured nginx to use http authentication to restrict the access to the statistics, but as I could not get apache and nginx to work simultaneously I skipped this step.
+
+###### configure munin to monitor apache
+	
+	ln -s /usr/share/munin/plugins/apache_accesses /etc/munin/plugins/
+	ln -s /usr/share/munin/plugins/apache_processes /etc/munin/plugins/
+	ln -s /usr/share/munin/plugins/apache_volume /etc/munin/plugins/ 
 
 ##### PostgreSQL
 
@@ -151,6 +164,7 @@
 - [https://discussions.udacity.com/t/oauth-provider-callback-uris/20460](https://discussions.udacity.com/t/oauth-provider-callback-uris/20460)
 - [http://weworkweplay.com/play/setting-up-your-own-linux-server-part-1-security/](http://weworkweplay.com/play/setting-up-your-own-linux-server-part-1-security/)
 - [https://help.ubuntu.com/lts/serverguide/automatic-updates.html](https://help.ubuntu.com/lts/serverguide/automatic-updates.html)
+- [https://wiki.ubuntuusers.de/munin](https://wiki.ubuntuusers.de/munin)
 
 
 	 
